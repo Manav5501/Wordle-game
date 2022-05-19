@@ -80,7 +80,9 @@ function gameinput(key) {
 
     let word = board[attempt].join("").toUpperCase();
     if (!wordSet.has(word)) {
-      alert("Invalid word"); 
+      modal.style.display = "block";
+      document.getElementById("my-head").innerHTML = "Invalid Word !"
+      document.getElementById("my-body").innerHTML = "Please Enter Valid Word"
       return;
     };
 
@@ -143,5 +145,42 @@ function gameinput(key) {
 }
 
 function endgame(result) {
-  alert(result)
+  if (result == "win") {
+      modal.style.display = "block";
+      document.getElementById("my-head").innerHTML = "Congratulations!"
+      document.getElementById("my-body").innerHTML = "You Win"
+  }
+  else {
+      modal.style.display = "block";
+      document.getElementById("my-head").innerHTML = "Better Luck Next Time"
+      document.getElementById("my-body").innerHTML = "You Loose"
+  }
+  span.onclick = function() {
+    modal.style.display = "none";
+    location.reload()
+    
+  }
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
+}
+
+
+// JAVASCRIPT MODAL
+
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
