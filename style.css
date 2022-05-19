@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 nav {
   box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.1);
@@ -26,6 +27,7 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.1);
 }
 .keyboard {
   margin-top: 1.5rem;
@@ -51,19 +53,20 @@ nav {
   text-align: center;
   border-radius: 0.5rem;
   
+  
 }
 .key-del,
 .key-enter {
   width: auto;
 }
 /* By Javascript */
-.key-dark {
+.bg-used {
   background-color: rgba(0, 0, 0, 0.7);
 }
-.key-yellow {
+.bg-yellow {
   background-color: rgba(225, 225, 50, 0.9);
 }
-.key-green {
+.bg-green {
   background-color: rgba(5, 205, 28, 0.8);
 }
 @media (max-width: 575px) {
