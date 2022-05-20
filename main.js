@@ -1,23 +1,23 @@
+// debugger;
 // Setup GameData
 const wordSet = new Set();
 fetch("/wordslist.txt")
   .then((response) => response.text())
-  .then((text) => text.split("\n"))
+  .then((text) => text.toUpperCase().split("\n"))
   .then((wordlist) => {
-    wordlist.forEach((word) => wordSet.add(word.toUpperCase()));
-  });
+    wordlist.forEach((word) => wordSet.add(word));
+    console.log(wordSet);
+  })
 
 var answerWord;
 fetch("/acceptable_answers.txt")
   .then((resp) => resp.text())
   .then((text) => text.split("\n"))
-  .then(
-    (answerlist) =>
-      (answerWord = answerlist[Math.floor(Math.random() * answerlist.length)])
-  );
-
-console.log(wordSet);
-console.log(answerWord);
+  .then((answerlist) => {
+    randomIndex = Math.floor(Math.random() * answerlist.length);
+    answerWord = answerlist[randomIndex];
+    console.log(answerWord);
+  });
 
 //Setup Input Listeners
 keys = document.getElementsByClassName("key");
@@ -56,7 +56,6 @@ var yellow_keys = [];
 var green_keys_index = [];
 var matches = ["", "", "", "", ""];
 
-
 function gameinput(key) {
   console.log(key);
 
@@ -77,21 +76,18 @@ function gameinput(key) {
 
   // Submit Guess
   if (key === "ENTER" && letterPos === 5) {
-
     let word = board[attempt].join("").toUpperCase();
     if (!wordSet.has(word)) {
-      modal.style.display = "block";
-      document.getElementById("my-head").innerHTML = "Invalid Word !"
-      document.getElementById("my-body").innerHTML = "Please Enter Valid Word"
+      warn_invalid_word();
       return;
-    };
+    }
 
     /* COLOR KEYS */
     // grey keys
-    for(i=0;i<5;i++) {
-      document.getElementById(word[i]).classList.add("bg-used")
+    for (i = 0; i < 5; i++) {
+      document.getElementById(word[i]).classList.add("bg-used");
     }
-    // green keys 
+    // green keys
     for (i = 0; i < 5; i++) {
       if (word[i] === answerWord[i]) {
         matches[i] = "g";
@@ -99,18 +95,19 @@ function gameinput(key) {
         green_keys_index.push(i);
       }
     }
+    console.log("1", matches);
     // yellow keys
     for (i = 0; i < 5; i++) {
       for (j = 0; j < 5; j++) {
         if (green_keys_index.includes(j) || yellow_keys.includes(j)) continue; //console.log("Match at ", i, j);
         if (word[i] == answerWord[j]) {
-          matches[i] = "y";
+          if (matches[i] == "") matches[i] = "y";
           yellow_keys.push(j);
           document.getElementById(word[i]).classList.add("bg-yellow");
         }
       }
     }
-    
+    console.log("2", matches);
     for (i = 0; i < 5; i++) {
       document
         .getElementsByClassName("row")
@@ -125,11 +122,11 @@ function gameinput(key) {
     }
 
     /* WIN CONDITION */
-    if (word === answerWord ) {
-      endgame("win")
+    if (word === answerWord) {
+      endgame("win");
       return;
     } else if (attempt == 5) {
-      endgame("lose")
+      endgame("lose");
       return;
     }
 
@@ -138,7 +135,7 @@ function gameinput(key) {
     letterPos = 0;
     green_keys_index = [];
     yellow_keys = [];
-    matches = [];
+    matches = ["", "", "", "", ""];
   }
 
   redrawGrid();
@@ -146,28 +143,25 @@ function gameinput(key) {
 
 function endgame(result) {
   if (result == "win") {
-      modal.style.display = "block";
-      document.getElementById("my-head").innerHTML = "Congratulations!"
-      document.getElementById("my-body").innerHTML = "You Win"
+    modal.style.display = "block";
+    document.getElementById("my-head").innerHTML = "Congratulations!";
+    document.getElementById("my-body").innerHTML = "You Win";
+  } else {
+    modal.style.display = "block";
+    document.getElementById("my-head").innerHTML = "Better Luck Next Time";
+    document.getElementById("my-body").innerHTML = "The word was " + answerWord;
   }
-  else {
-      modal.style.display = "block";
-      document.getElementById("my-head").innerHTML = "Better Luck Next Time"
-      document.getElementById("my-body").innerHTML = "You Loose"
-  }
-  span.onclick = function() {
+  span.onclick = function () {
     modal.style.display = "none";
-    location.reload()
-    
-  }
+    location.reload();
+  };
   // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
 }
-}
-
 
 // JAVASCRIPT MODAL
 
@@ -180,7 +174,28 @@ var btn = document.getElementById("myBtn");
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+span.onclick = function () {
   modal.style.display = "none";
-}
+};
 
+
+// Lokesh <= added this for the warning modal.  
+function warn_invalid_word() {
+  modal.style.display = "block";
+  document.getElementById("my-head").innerHTML = "Invalid Word!";
+  document.getElementById("my-body").innerHTML = "Please enter a valid word.";
+
+  modal.onanimationend = () => {
+    setTimeout(() => {
+      modal.style.animation = "none";
+      void modal.offsetHeight; /* causes animation to reset by triggering reflow */
+      modal.style.animation = "animatetop 0.4s";
+      modal.style.animationDirection = "reverse";
+      modal.onanimationend = () => {
+        modal.style.display = "none";
+        modal.style.animation = "";
+        modal.onanimationend = null;
+      };
+    }, 1500);
+  };
+}

@@ -4,6 +4,9 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+body {
+  background-color: rgba(145, 222, 255, 0.1);
+}
 nav {
   box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.1);
   padding: 1rem;
@@ -28,7 +31,8 @@ nav {
   justify-content: center;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.1);
-  animation-duration: 5s;
+  animation-name: example;
+  animation-duration: 1s;
 }
 .keyboard {
   margin-top: 1.5rem;
@@ -157,8 +161,8 @@ nav {
       text-align: center;
       font-size: bold;
       color: white;
-      font-size: 2rem;
-      font-weight: bold;
+      font-size: 1.75rem;
+      /* font-weight: bold; */
      
     }
     
@@ -170,9 +174,9 @@ nav {
 
     @keyframes example {
       from {
-        transform: rotate(0deg);
+        transform: rotateY(0deg);
       }
       to {
-        transform: rotate(360deg);
+        transform: rotateY(360deg);
       }
     }
